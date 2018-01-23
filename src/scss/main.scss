@@ -1,0 +1,26 @@
+@import "./carousel/carousel.scss";
+@import "./mixins/flex.scss";
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+ul, li {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.container {
+  @include flexbox();
+  @include flex-wrap(wrap);
+  padding: 10px;
+  .col-6 {
+    width: 50%;
+    padding: 10px;
+  }
+}
