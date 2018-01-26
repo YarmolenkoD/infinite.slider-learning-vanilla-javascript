@@ -1,13 +1,15 @@
-Homework 12.1
-infinite slider
+# Homework 12.1
+## Infinite slider.
 
-Technologies Used: JS, HTML5, SCSS, WEBPACK
+### Technologies Used:
+- Webpack
+- JS
+- SCSS
+- HTML5
 
-Installation:
-        run: npm install
-Start aplication:
-        run: npm run start
-Building production aplication:
-        run: npm run build
+### Installation:
+- To download the packages, run this command: **npm i** or **npm install**
+- To start project, run this command: **npm start**
+- To building production aplication, run this command: **npm run build**
         
         
