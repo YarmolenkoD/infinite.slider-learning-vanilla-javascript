@@ -59,7 +59,6 @@ function carouselTouchDown (event) {
         track.appendChild(firstElement)
         setItemsId(track.children)
         track.style.left = `-${carousel.offsetWidth * (currentItem - 1)}px`
-        // event.target.parentNode.dataset.currentItem = parseInt(event.target.parentNode.dataset.currentItem)
       }
       let nextPosition = (isMaxItem ? currentItem : currentItem + 1) * carousel.offsetWidth
       let currentPosition = parseInt(track.style.left.split('.')[0].match(/[0-9]/g).join(''))
