@@ -22,5 +22,8 @@ ul, li {
   .col-6 {
     width: 50%;
     padding: 10px;
+    @media screen and (max-width: 1000px) {
+      width: 100%;
+    }
   }
 }

@@ -1,28 +1,21 @@
 import { createCarousel } from './carousel'
 
+//create sliders
 window.onload = function() {
   createCarousel({
-    carouselId: 'carousel-1'
-    // arrow: true,
-    // items: 1,
-    // controls: true
+    carouselId: 'carousel-1',
+    // arrows: true
   })
   createCarousel({
-    carouselId: 'carousel-2'
-    // arrow: true,
-    // items: 2,
-    // controls: true
+    carouselId: 'carousel-2',
+    // arrows: true
   })
   createCarousel({
-    carouselId: 'carousel-3'
-    // arrow: true,
-    // items: 1,
-    // controls: true
+    carouselId: 'carousel-3',
+    arrows: true
   })
   createCarousel({
-    carouselId: 'carousel-4'
-    // arrow: true,
-    // items: 3,
-    // controls: true
+    carouselId: 'carousel-4',
+    arrows: true
   })
 }
