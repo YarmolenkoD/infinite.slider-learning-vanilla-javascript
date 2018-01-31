@@ -15,4 +15,20 @@ export function createCarousel (data) {
     carousel.appendChild(rightArrow)
     carousel.appendChild(leftArrow)
   }
+  if (data.indicators) {
+    let containerOfIndicators = document.createElement('ul')
+    containerOfIndicators.classList.add('indicators-container')
+    for (let i = 0; i < carousel.children[0].children.length; i++) {
+      let indicator = document.createElement('li')
+      indicator.classList.add('indicator')
+      indicator.dataset.id = `${i}`
+      if (i === 0) {
+        indicator.classList.add('active')
+      }
+      containerOfIndicators.style.marginLeft = `-${carousel.children[0].children.length * 30 - ((carousel.children[0].children.length * 30) / 2)}px`
+      containerOfIndicators.style.zIndex = '10'
+      containerOfIndicators.appendChild(indicator)
+    }
+    carousel.appendChild(containerOfIndicators)
+  }
 }

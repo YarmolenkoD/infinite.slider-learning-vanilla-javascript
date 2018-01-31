@@ -4,15 +4,18 @@ import { createCarousel } from './carousel'
 window.onload = function() {
   createCarousel({
     carouselId: 'carousel-1',
-    // arrows: true
+    arrows: true,
+    // indicators: true
   })
   createCarousel({
     carouselId: 'carousel-2',
     // arrows: true
+    indicators: true
   })
   createCarousel({
     carouselId: 'carousel-3',
-    arrows: true
+    arrows: true,
+    indicators: true
   })
   createCarousel({
     carouselId: 'carousel-4',

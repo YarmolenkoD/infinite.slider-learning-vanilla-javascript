@@ -47,7 +47,7 @@ function carouselTouchDown (event) {
       currentCarousel.items =  currentCarousel.track.children
       currentCarousel.track.style.zIndex = '5'
     }
-  } else if (event.target.classList.contains('right-arrow')) {
+  } else if (event.target.classList && event.target.classList.contains('right-arrow')) {
     if (!isAnimation[event.target.parentNode.id]) {
       let carousel = event.target.parentNode
       let track = carousel.children[0]
@@ -64,8 +64,12 @@ function carouselTouchDown (event) {
       let currentPosition = parseInt(track.style.left.split('.')[0].match(/[0-9]/g).join(''))
       event.target.parentNode.dataset.currentItem = `${isMaxItem ? currentItem : currentItem + 1}`
       sliderAnimation(currentPosition, nextPosition, track, true)
+      let indicatorsContainer = checkIndicators(carousel)
+      if (indicatorsContainer) {
+        setCurrentIndicator(indicatorsContainer, indicatorsContainer.children[isMaxItem ? currentItem : currentItem + 1])
+      }
     }
-  } else if (event.target.classList.contains('left-arrow')) {
+  } else if (event.target.classList && event.target.classList.contains('left-arrow')) {
     if (!isAnimation[event.target.parentNode.id]) {
       let carousel = event.target.parentNode
       let track = carousel.children[0]
@@ -82,7 +86,23 @@ function carouselTouchDown (event) {
       let currentPosition = parseInt(track.style.left.split('.')[0].match(/[0-9]/g).join(''))
       carousel.dataset.currentItem = `${currentItem - 1}`
       sliderAnimation(currentPosition, nextPosition, track)
+      let indicatorsContainer = checkIndicators(carousel)
+      if (indicatorsContainer) {
+        setCurrentIndicator(indicatorsContainer, indicatorsContainer.children[currentItem - 1])
+      }
     }
+  } else if (event.target.classList && event.target.classList.contains('indicator')) {
+    setCurrentIndicator(event.target.parentNode.children, event.target)
+    let carousel = event.target.parentNode.parentNode
+    let track = event.target.parentNode.parentNode.children[0]
+    let currentPosition = parseInt(track.style.left.split('.')[0].match(/[0-9]/g).join(''))
+    let nextPosition = parseInt(event.target.dataset.id) * carousel.offsetWidth
+    if (parseInt(event.target.dataset.id) > parseInt(carousel.dataset.currentItem)) {
+      sliderAnimation(currentPosition, nextPosition, track, true)
+    } else {
+      sliderAnimation(currentPosition, nextPosition, track)
+    }
+    carousel.dataset.currentItem = event.target.dataset.id
   }
 }
 
@@ -145,6 +165,10 @@ function carouselTouchUp (event) {
       currentCarousel.carousel.dataset.currentItem = `${currentCarousel.currentItem - 1}`
       sliderAnimation(currentPosition, nextPosition, currentCarouselTrack)
       currentCarousel.track.style.zIndex = '0'
+      let indicatorsContainer = checkIndicators(currentCarousel.carousel)
+      if (indicatorsContainer) {
+        setCurrentIndicator(indicatorsContainer, indicatorsContainer.children[currentCarousel.currentItem - 1])
+      }
     } else if (currentCarousel.carousel && cursorPosition > event.pageX) {
       // checks if the current element is the last
       let isMaxItem = false
@@ -157,6 +181,10 @@ function carouselTouchUp (event) {
       currentCarousel.carousel.dataset.currentItem = `${isMaxItem ? currentCarousel.currentItem : currentCarousel.currentItem + 1}`
       sliderAnimation(currentPosition, nextPosition, currentCarouselTrack, true)
       currentCarousel.track.style.zIndex = '0'
+      let indicatorsContainer = checkIndicators(currentCarousel.carousel)
+      if (indicatorsContainer) {
+        setCurrentIndicator(indicatorsContainer, indicatorsContainer.children[isMaxItem ? currentCarousel.currentItem : currentCarousel.currentItem + 1])
+      }
     }
   }
   clearVariables()
@@ -229,4 +257,24 @@ function setItemsId(arrayOfItems) {
   for (let i = 0; i < arrayOfItems.length; i++) {
     arrayOfItems[i].dataset.id = `${i}`
   }
+}
+
+function setCurrentIndicator (allIndicators, target) {
+  console.log(allIndicators, target)
+  for (let i = 0; i < allIndicators.length; i++) {
+    if (allIndicators[i].dataset.id !== target.dataset.id) {
+      allIndicators[i].className = 'indicator'
+    }
+  }
+  target.classList.add('active')
+}
+
+function checkIndicators (carousel) {
+  let result = null
+  for (let i = 0; i < carousel.children.length; i ++) {
+    if (carousel.children[i].classList.contains('indicators-container')) {
+      result = carousel.children[i]
+    }
+  }
+  return result
 }
