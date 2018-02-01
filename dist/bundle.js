@@ -180,6 +180,9 @@ function carouselTouchFunctionality (carousel) {
   carousel.dataset.currentItem = '0'
   isAnimation[carousel.id] = false
   setItemsId(carousel.children[0].children)
+  for (let i = 0; i < carousel.children[0].children.length; i++) {
+    carousel.children[0].children[i].dataset.indicator = `${i}`
+  }
   // adding events for slider
   carousel.addEventListener('mousedown', carouselTouchDown, false)
   carousel.addEventListener('mousemove', carouselTouchMove, false)
@@ -227,7 +230,7 @@ function carouselTouchDown (event) {
       sliderAnimation(currentPosition, nextPosition, track, true)
       let indicatorsContainer = checkIndicators(carousel)
       if (indicatorsContainer) {
-        setCurrentIndicator(indicatorsContainer, indicatorsContainer.children[isMaxItem ? currentItem : currentItem + 1])
+        setCurrentIndicator(indicatorsContainer, indicatorsContainer.children[carousel.children[0].children[isMaxItem ? currentItem : currentItem + 1].dataset.indicator])
       }
     }
   } else if (event.target.classList && event.target.classList.contains('left-arrow')) {
@@ -249,15 +252,22 @@ function carouselTouchDown (event) {
       sliderAnimation(currentPosition, nextPosition, track)
       let indicatorsContainer = checkIndicators(carousel)
       if (indicatorsContainer) {
-        setCurrentIndicator(indicatorsContainer, indicatorsContainer.children[currentItem - 1])
+        setCurrentIndicator(indicatorsContainer, indicatorsContainer.children[carousel.children[0].children[currentItem - 1].dataset.indicator])
       }
     }
   } else if (event.target.classList && event.target.classList.contains('indicator')) {
-    setCurrentIndicator(event.target.parentNode.children, event.target)
+    setCurrentIndicator(event.target.parentNode, event.target)
     let carousel = event.target.parentNode.parentNode
     let track = event.target.parentNode.parentNode.children[0]
     let currentPosition = parseInt(track.style.left.split('.')[0].match(/[0-9]/g).join(''))
-    let nextPosition = parseInt(event.target.dataset.id) * carousel.offsetWidth
+    let nextPosition
+    for (let i = 0; i < track.children.length; i++) {
+      if (track.children[i].dataset.indicator === event.target.dataset.id) {
+        console.log(222222, track.children[i].offsetLeft)
+        nextPosition = track.children[i].offsetLeft
+      }
+    }
+    // let nextPosition = parseInt(event.target.dataset.id) * carousel.offsetWidth
     if (parseInt(event.target.dataset.id) > parseInt(carousel.dataset.currentItem)) {
       sliderAnimation(currentPosition, nextPosition, track, true)
     } else {
@@ -320,21 +330,27 @@ function carouselTouchMove(event) {
 function carouselTouchUp (event) {
   if (currentCarousel.carousel) {
     if (currentCarousel.carousel && cursorPosition < event.pageX) {
+      let indicatorsContainer = checkIndicators(currentCarousel.carousel)
+      if (indicatorsContainer) {
+        // setCurrentIndicator(indicatorsContainer, indicatorsContainer.children[currentCarousel.currentItem - 1])
+        setCurrentIndicator(indicatorsContainer, indicatorsContainer.children[currentCarousel.carousel.children[0].children[currentCarousel.currentItem - 1].dataset.indicator])
+      }
       let nextPosition = (currentCarousel.currentItem - 1) * currentCarousel.carouselWidth
       let currentPosition = parseInt(currentCarousel.carousel.children[0].style.left.split('.')[0].match(/[0-9]/g).join(''))
       let currentCarouselTrack = currentCarousel.carousel.children[0]
       currentCarousel.carousel.dataset.currentItem = `${currentCarousel.currentItem - 1}`
       sliderAnimation(currentPosition, nextPosition, currentCarouselTrack)
       currentCarousel.track.style.zIndex = '0'
-      let indicatorsContainer = checkIndicators(currentCarousel.carousel)
-      if (indicatorsContainer) {
-        setCurrentIndicator(indicatorsContainer, indicatorsContainer.children[currentCarousel.currentItem - 1])
-      }
     } else if (currentCarousel.carousel && cursorPosition > event.pageX) {
       // checks if the current element is the last
       let isMaxItem = false
       if (currentCarousel.currentItem === parseInt(currentCarousel.carousel.dataset.maxItem)) {
         isMaxItem = true
+      }
+      let indicatorsContainer = checkIndicators(currentCarousel.carousel)
+      if (indicatorsContainer) {
+        setCurrentIndicator(indicatorsContainer, indicatorsContainer.children[currentCarousel.carousel.children[0].children[isMaxItem ? currentCarousel.currentItem : currentCarousel.currentItem + 1].dataset.indicator])
+        // setCurrentIndicator(indicatorsContainer, indicatorsContainer.children[carousel.children[0].children[currentItem - 1].dataset.indicator])
       }
       let nextPosition = (isMaxItem ? currentCarousel.currentItem : currentCarousel.currentItem + 1) * currentCarousel.itemWidth
       let currentPosition = parseInt(currentCarousel.carousel.children[0].style.left.split('.')[0].match(/[0-9]/g).join(''))
@@ -342,10 +358,6 @@ function carouselTouchUp (event) {
       currentCarousel.carousel.dataset.currentItem = `${isMaxItem ? currentCarousel.currentItem : currentCarousel.currentItem + 1}`
       sliderAnimation(currentPosition, nextPosition, currentCarouselTrack, true)
       currentCarousel.track.style.zIndex = '0'
-      let indicatorsContainer = checkIndicators(currentCarousel.carousel)
-      if (indicatorsContainer) {
-        setCurrentIndicator(indicatorsContainer, indicatorsContainer.children[isMaxItem ? currentCarousel.currentItem : currentCarousel.currentItem + 1])
-      }
     }
   }
   clearVariables()
@@ -421,10 +433,10 @@ function setItemsId(arrayOfItems) {
 }
 
 function setCurrentIndicator (allIndicators, target) {
-  console.log(allIndicators, target)
-  for (let i = 0; i < allIndicators.length; i++) {
-    if (allIndicators[i].dataset.id !== target.dataset.id) {
-      allIndicators[i].className = 'indicator'
+  console.log(allIndicators.children)
+  for (let i = 0; i < allIndicators.children.length; i++) {
+    if (allIndicators.children[i].dataset.id !== target.dataset.id) {
+      allIndicators.children[i].className = 'indicator'
     }
   }
   target.classList.add('active')
